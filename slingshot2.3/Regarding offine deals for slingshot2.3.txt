@@ -8,15 +8,21 @@ minimum size to be something like 2GB when I propose deals to you so we are not 
 3. This slingshot phase requires all deals to be fast-retrievable, so please don't delete the fast-retrieval cache on your miner for 
 at least 2 months, preferably the whole year.
 
+4. Please set your unseal price to zero by this command: `lotus-miner retrieval-deals set-ask --unseal-price 0`
+Otherwise even with fast-retreival on, due to a current bug (https://github.com/filecoin-project/lotus/issues/5821) it will always ignore 
+the unsealed copy and try to unseal, and it will crash.
+Once unseal works again I will notify you to revert the unseal price.
+You can check your current unseal price with command: `lotus-miner retrieval-deals get-ask`
+
 ------ the following information is for "small miners" mostly. If you have your own successful importing scheme feel free to skip -------------
 
-4. Check your .lotus/config.toml DefaultMaxFee, the default 0.007FIL is too low in most cases your messages will get stuck. Please 
+5. Check your .lotus/config.toml DefaultMaxFee, the default 0.007FIL is too low in most cases your messages will get stuck. Please 
 increase it to be 0.1FIL or more and restart your daemon.
 
-5. Check your .lotusminer/config.toml MaxPublishDealsFee, this will need to be set to be more than the estimated total publishstoragedeal 
+6. Check your .lotusminer/config.toml MaxPublishDealsFee, this will need to be set to be more than the estimated total publishstoragedeal 
 fee (if batching), see below.
 
-6. The new batch publishstoragedeal feature is a great way to save burn fee. But will require extra caution on how many deals batching 
+7. The new batch publishstoragedeal feature is a great way to save burn fee. But will require extra caution on how many deals batching 
 together. The default behavior is 8 deals within 1 hour will be batched. However I recommend you to only import deals that you can 
 concurrently seal at a time. If you import more than you can handle at the same time, the whole batch could fail.
 
@@ -27,5 +33,5 @@ will save more than 50% of burn fee.
 
 Please estimate your batch sealing ability and set your MaxPublishDealsFee to be more than the total burn fee accordingly.
 
-7. I recommend you turn off accepting online deals while batch sealing offline deals because extra deals could exceed your ability and cause failures.
+8. I recommend you turn off accepting online deals while batch sealing offline deals because extra deals could exceed your ability and cause failures.
 This can be done via command without restarting your miner: lotus-miner storage-deals selection reject --online
